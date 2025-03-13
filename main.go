@@ -46,12 +46,17 @@ func main() {
 	fmt.Print(logo)
 
 	flag.StringVar(&mode, "mode", "fix", "working mode. Default: fix. Examples: fix (proposes fixes for the matching vulnerabilities), check (only checks for matching vulnerabilites and exits)")
-	flag.StringVar(&vulnerabilityRef, "vuln", "", "vulnerability reference. CVE and GO vuln id references are supported. Examples: CVE-2025-22868 or GO-2025-3488")
+	flag.StringVar(&vulnerabilityRef, "vuln", "", "vulnerability reference. Required. CVE and GO vuln id references are supported. Examples: CVE-2025-22868 or GO-2025-3488")
 	flag.StringVar(&defaultBranch, "default-branch", "main", "default branch for the repository")
 	flag.StringVar(&ocpRemote, "remote", "ocp", "remote name that points to the official openshift remote repository")
-	flag.IntVar(&ocpBegin, "begin", 12, "earlies OpenShift minor version release branch to check for vulnerabilities. Examples: 12 (for release-4.12). Default: 12")
+	flag.IntVar(&ocpBegin, "begin", 12, "earliest OpenShift minor version release branch to check for vulnerabilities. Examples: 12 (for release-4.12). Default: 12")
 	flag.IntVar(&ocpEnd, "end", 19, "latest OpenShift minor version release branch to check for vulnerabilities. Examples: 19 (for release-4.19). Default: 19")
 	flag.Parse()
+
+	if vulnerabilityRef == "" {
+		fmt.Println("-vuln must be specified")
+		os.Exit(1)
+	}
 
 	branchPrefix := "release-4."
 
